@@ -1,0 +1,100 @@
+---
+- name: Ensure required system packages are installed (Debian)
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Add Docker GPG key (Debian)
+  apt_key:
+    url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Add Docker APT repository (Debian)
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Update APT cache
+  apt:
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Install Docker packages (Debian)
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+  when: ansible_os_family == "Debian"
+  become: true
+
+# --- RedHat-based installs ---
+- name: Install required system packages (RedHat)
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Add Docker YUM repository (RedHat)
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Install Docker packages (RedHat)
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
+  when: ansible_os_family == "RedHat"
+  become: true
+
+# --- Common post-install steps ---
+- name: Start and enable Docker service
+  service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Add current user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+  become: true
+
+- name: Create Docker working directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - /opt/docker-projects
+    - /opt/docker-volumes
+  become: true
