@@ -2,3 +2,14 @@
 hosts: localhost
 become: true
 
+- name: Install and configure Docker
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Include Docker installation tasks
+      include_tasks: tasks/docker/main.yml
+      tags: docker # including tags means we can later implement a bulk start install by tagging specific ones with "fresh" for example
+
+  # run with: ansible-playbook -i inventories/hosts.ini install-docker.yml --tags docker
