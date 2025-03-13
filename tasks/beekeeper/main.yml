@@ -1,0 +1,14 @@
+---
+- name: Install Beekeeper Studio (Debian-based systems)
+  apt:
+    deb: https://github.com/beekeeper-studio/beekeeper-studio/releases/latest/download/beekeeper-studio-amd64.deb
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Install Beekeeper Studio (RedHat-based systems)
+  dnf:
+    name: https://github.com/beekeeper-studio/beekeeper-studio/releases/latest/download/beekeeper-studio.x86_64.rpm
+    state: present
+  when: ansible_os_family == "RedHat"
+  become: true
