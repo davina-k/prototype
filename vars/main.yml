@@ -1,1 +1,10 @@
 
+    timezone: "UTC"
+    packages:
+      - curl
+      - wget
+      - vim
+      - git
+      - htop
+      - sudo
+      - python3
