@@ -1,15 +1,21 @@
 ---
-hosts: localhost
-become: true
-
-- name: Install and configure Docker
+- name: Install and configure base C-Disk image
   hosts: all
-  become: true
+  become: true #can later change this to false and have each main.yml contain it's own root/local permissions 
   gather_facts: true
 
+  # vars_files:
+  #   - vars/main.yml
+
   tasks:
+    - name: Include Beekeeper installation tasks
+      include_tasks: tasks/beekeeper/main.yml
+      tags: beekeeper
+
     - name: Include Docker installation tasks
       include_tasks: tasks/docker/main.yml
-      tags: docker # including tags means we can later implement a bulk start install by tagging specific ones with "fresh" for example
+      tags: docker
 
-  # run with: ansible-playbook -i inventories/hosts.ini install-docker.yml --tags docker
+    - name: Include certificate setup tasks
+      include_tasks: tasks/certs/main.yml
+      tags: certs
