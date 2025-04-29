@@ -10,3 +10,11 @@ Run the playbook from the main folder with:
 
 ```bash
 ansible-playbook -i inventories/hosts.ini install.yml
+
+to run with specific tags such as just a docker install, run with --tags, for example:
+
+ansible-playbook -i inventories/hosts.ini install.yml --tags docker
+
+or to skip certain installs, run with --skip-tags, for example: 
+
+ansible-playbook -i inventories/hosts.ini install.yml --skip-tags beekeeper
