@@ -1,0 +1,35 @@
+---
+- name: Install Docker
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update package cache
+      ansible.builtin.yum:
+        update_cache: yes
+
+    - name: Install required packages
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+
+    - name: Add Docker GPG key
+      ansible.builtin.get_url:
+        url: "https://download.docker.com/linux/centos/7/x86_64/stable/yum/docker-ce-stable-19.03.12.x86_64.rpm"
+        dest: /tmp/docker-ce-stable-19.03.12.x86_64.rpm
+        checksum: "md5:6f5b3df62e7776a6874907d630dd2346"
+
+    - name: Install Docker packages
+      ansible.builtin.yum:
+        name: /tmp/docker-ce-stable-19.03.12.x86_64.rpm
+        state: present
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
