@@ -1,1 +1,66 @@
 # https://tonyisageek.blogspot.com/2025/04/setting-up-gitlab-within-docker.html
+
+---
+- name: Install GitLab CE using Docker
+  hosts: localhost
+  become: true
+  vars:
+    gitlab_external_url: "http://localhost"
+    gitlab_container_name: "gitlab"
+    gitlab_image: "gitlab/gitlab-ce:latest"
+    gitlab_data_dir: "/srv/gitlab"
+
+  tasks:
+  tasks:
+    - name: Check if Docker is installed
+      command: docker --version
+      register: docker_check
+      ignore_errors: yes
+
+    - name: Include Docker install playbook if Docker is missing
+      import_playbook: ../docker/main.yml #i need to check this path is right
+      when: docker_check.rc != 0
+
+    - name: Ensure Docker is started and enabled
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create GitLab data directories
+      file:
+        path: "{{ gitlab_data_dir }}/{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - config
+        - logs
+        - data
+
+    - name: Pull GitLab CE Docker image
+      docker_image:
+        name: "{{ gitlab_image }}"
+        source: pull
+
+    - name: Run GitLab CE container
+      docker_container:
+        name: "{{ gitlab_container_name }}"
+        image: "{{ gitlab_image }}"
+        restart_policy: always
+        ports:
+          - "80:80"
+          - "443:443"
+          - "22:22"
+        volumes:
+          - "{{ gitlab_data_dir }}/config:/etc/gitlab"
+          - "{{ gitlab_data_dir }}/logs:/var/log/gitlab"
+          - "{{ gitlab_data_dir }}/data:/var/opt/gitlab"
+        env:
+          GITLAB_OMNIBUS_CONFIG: |
+            external_url '{{ gitlab_external_url }}'
+
+
+
+
