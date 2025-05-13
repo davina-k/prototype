@@ -2,8 +2,8 @@
 
 ---
 - name: Install GitLab CE using Docker
-  hosts: localhost
-  become: true
+  # hosts: localhost
+  # become: true
 
   vars:
     gitlab_external_url: "http://localhost"
