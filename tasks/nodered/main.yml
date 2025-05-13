@@ -1,0 +1,55 @@
+---
+
+- name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install prerequisites
+      apt:
+        name:
+          - curl
+          - build-essential
+          - git
+        state: present
+
+    - name: Add NodeSource APT repository
+      shell: curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+      args:
+        executable: /bin/bash
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install Node-RED
+      npm:
+        name: node-red
+        global: yes
+
+    - name: Enable Node-RED to start on boot (optional systemd setup)
+      copy:
+        dest: /etc/systemd/system/node-red.service
+        content: |
+          [Unit]
+          Description=Node-RED
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/bin/env node-red
+          Restart=on-failure
+          User={{ ansible_user }}
+          Group={{ ansible_user }}
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start Node-RED
+      systemd:
+        name: node-red
+        enabled: yes
+        state: started
