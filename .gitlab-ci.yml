@@ -1,0 +1,14 @@
+# honestly the bare bare minimum, but if we set up a gitlab runner to automate the running of the playbook for us too what a fun little win !
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: your_ansible_image:latest # Or your custom Ansible EE image
+  script:
+    - echo "Running Ansible playbook..."
+    - ansible-playbook -i inventory/main.yml playbook.yml --extra-vars @vars/prod.yml # Assuming prod.yml is a private variables file
+    - echo "Ansible playbook completed!"
+  tags:
+    - runner_tag # Replace with your Runner's tag
