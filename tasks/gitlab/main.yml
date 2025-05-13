@@ -11,9 +11,9 @@
       register: docker_check
       ignore_errors: yes
 
-    - name: Include Docker install playbook if Docker is missing
-      import_playbook: ../docker/main.yml #i need to check this path is right
-      when: docker_check.rc != 0
+    # - name: Include Docker install playbook if Docker is missing
+    #   import_playbook: ../docker/main.yml #i need to check this path is right
+    #   when: docker_check.rc != 0
 
     - name: Ensure Docker is started and enabled
       systemd:
