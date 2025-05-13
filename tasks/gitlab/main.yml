@@ -1,9 +1,10 @@
 # https://tonyisageek.blogspot.com/2025/04/setting-up-gitlab-within-docker.html
 
 ---
-- name: Install GitLab CE using Docker
-  become: true
-  vars: ../vars/main.yml
+
+# - name: Install GitLab CE using Docker
+#   become: true
+#   vars: ../vars/main.yml
 
   tasks:
     - name: Check if Docker is installed
