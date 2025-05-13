@@ -30,7 +30,7 @@
 - name: Update APT cache
   apt:
     update_cache: yes
-  when: ansible_os_family == 
+  when: ansible_os_family == "Debian"
   become: true
 
 - name: Install Docker packages (Debian)
@@ -74,7 +74,6 @@
   when: ansible_os_family == "RedHat"
   become: true
 
-# --- Common post-install steps ---
 - name: Start and enable Docker service
   service:
     name: docker
