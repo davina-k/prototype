@@ -1,18 +1,17 @@
 ---
 
-tasks:
-  - name: Ensure CA certificate directory exists
-    file:
-      path: /usr/local/share/ca-certificates
-      state: directory
-      mode: 0755
+- name: Ensure CA certificate directory exists
+  file:
+    path: /usr/local/share/ca-certificates
+    state: directory
+    mode: 0755
 
-  - name: Copy CA certificate to target host
-    copy:
-      src: "{{ path_to_ca_cert }}"
-      dest: /usr/local/share/ca-certificates/{{ ca_cert_filename }}
-      mode: 0644  # least permissions, but can increase
+- name: Copy CA certificate to target host
+  copy:
+    src: "{{ path_to_ca_cert }}"
+    dest: /usr/local/share/ca-certificates/{{ ca_cert_filename }}
+    mode: 0644  # least permissions, but can increase
 
-  - name: Update system CA certificates
-    command: update-ca-certificates
-    ignore_errors: true 
+- name: Update system CA certificates
+  command: update-ca-certificates
+  ignore_errors: true 
