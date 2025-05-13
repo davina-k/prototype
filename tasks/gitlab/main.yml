@@ -1,10 +1,10 @@
 # https://tonyisageek.blogspot.com/2025/04/setting-up-gitlab-within-docker.html
 
 ---
-
 - name: Install GitLab CE using Docker
   hosts: localhost
   become: true
+
   vars:
     gitlab_external_url: "http://localhost"
     gitlab_container_name: "gitlab"
@@ -17,9 +17,9 @@
       register: docker_check
       ignore_errors: yes
 
-    # - name: Include Docker install playbook if Docker is missing
-    #   import_playbook: ../docker/main.yml #i need to check this path is right
-    #   when: docker_check.rc != 0
+    - name: Include Docker install tasks if missing
+      include_tasks: ../docker/main.yml
+      when: docker_check.rc != 0
 
     - name: Ensure Docker is started and enabled
       systemd:
@@ -61,6 +61,4 @@
           GITLAB_OMNIBUS_CONFIG: |
             external_url '{{ gitlab_external_url }}'
 
-
-
-
+  
