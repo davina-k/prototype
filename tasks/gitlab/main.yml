@@ -11,6 +11,7 @@
     gitlab_image: "gitlab/gitlab-ce:latest"
     gitlab_data_dir: "/srv/gitlab"
 
+  tasks:
     - name: Check if Docker is installed
       command: docker --version
       register: docker_check
