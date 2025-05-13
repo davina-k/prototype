@@ -17,7 +17,7 @@
       include_tasks: tasks/docker/main.yml
       tags: docker
 
-    - name: Node red install
+    - name: Node Red install
       include_tasks: tasks/nodered/main.yml
       tags: node
 
