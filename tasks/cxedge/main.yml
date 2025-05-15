@@ -1,6 +1,6 @@
 --- 
 
-# run playbook with -e "var_initial=100"
+# run playbook with -e "var_initial=XX"
 
 - name: Install and configure CX-Edge
   hosts: localhost
