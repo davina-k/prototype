@@ -1,6 +1,6 @@
 ---
 
-- name: Update apt cache
+    - name: Update apt cache
       apt:
         update_cache: yes
 
@@ -38,8 +38,8 @@
           [Service]
           ExecStart=/usr/bin/env node-red
           Restart=on-failure
-          User={{ ansible_user }}
-          Group={{ ansible_user }}
+          User={{ ansible_env.USER }}
+          Group={{ ansible_env.USER }}
 
           [Install]
           WantedBy=multi-user.target

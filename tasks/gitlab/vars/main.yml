@@ -1,0 +1,6 @@
+---
+
+  gitlab_external_url: "http://localhost"
+  gitlab_container_name: "gitlab"
+  gitlab_image: "gitlab/gitlab-ce:latest"
+  gitlab_data_dir: "/srv/gitlab"

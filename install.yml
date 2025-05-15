@@ -8,14 +8,23 @@
   #   - vars/main.yml
 
   tasks:
-    - name: Include Beekeeper installation tasks
-      include_tasks: tasks/beekeeper/main.yml
-      tags: beekeeper
 
-    - name: Include Docker installation tasks
+    - name: Certificate set up
+      include_tasks: tasks/certs/main.yml
+      tags: certs
+
+    - name: Docker install
       include_tasks: tasks/docker/main.yml
       tags: docker
 
-    - name: Include certificate setup tasks
-      include_tasks: tasks/certs/main.yml
-      tags: certs
+    - name: Node Red install
+      include_tasks: tasks/nodered/main.yml
+      tags: node
+
+    - name: Gitlab
+      include_tasks: tasks/gitlab/main.yml
+      tags: gitlab
+
+    - name: Beekeeper install
+      include_tasks: tasks/beekeeper/main.yml
+      tags: beekeeper

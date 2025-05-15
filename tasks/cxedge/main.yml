@@ -1,0 +1,74 @@
+--- 
+
+# run playbook with -e "var_initial=100"
+
+- name: Install and configure CX-Edge
+  hosts: localhost
+  vars:
+    fqdn: "octo-{{ var_initial }}"
+    system_ip: "{{ ansible_default_ipv4.address }}"
+    docker_tar_file: "cx-images-1.13.1.tar"
+    zip_file: "cx-distribution-1.13.1.zip"
+    distro_dir: "cx-distribution-1.13.1"
+
+  tasks:
+
+    - name: Download Docker tar file from repo
+      get_url:
+        url: "http://your.repo.url/path/to/{{ docker_tar_file }}"
+        dest: "~/{{ docker_tar_file }}"
+
+    - name: Load Docker image
+      command: docker load --input ~/{{ docker_tar_file }}
+
+    - name: List Docker images (for debug/check)
+      command: docker image list
+      register: docker_images
+
+    - name: Print Docker image list
+      debug:
+        var: docker_images.stdout_lines
+
+    - name: Unzip distribution package
+      unarchive:
+        src: "~/{{ zip_file }}"
+        dest: ~/
+        remote_src: yes
+
+    - name: Modify .env file with FQDN and IP
+      lineinfile:
+        path: "~/{{ distro_dir }}/config/.env"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backrefs: yes
+      loop:
+        - { regexp: '^FQDN=.*', line: 'FQDN=octo-{{ var_suffix }}' }
+        - { regexp: '^SYSTEM_IP=.*', line: 'SYSTEM_IP=10.10.101.{{ system_ip_suffix }}' }
+
+
+    - name: Replace localhost with octo-VAR in .env
+      replace:
+        path: "~/{{ distro_dir }}/config/.env"
+        regexp: 'localhost'
+        replace: "octo-{{ var_suffix }}"
+
+    - name: Run CX-Edge installer
+      command: sudo ./install.sh --fqdn {{ fqdn }}
+      args:
+        chdir: "~/{{ distro_dir }}"
+
+  - name: Update /etc/hosts with new IP
+    lineinfile:
+      path: /etc/hosts
+      regexp: '^121\..*'
+      line: "{{ system_ip }}    {{ fqdn }}"
+      backup: yes
+
+    - name: Start CX-Edge
+      command: ./start.sh
+      args:
+        chdir: "~/{{ distro_dir }}"
+
+    - name: Display final URL
+      debug:
+        msg: "Navigate to https://{{ fqdn }} and log in with u:admin, p:admin"
