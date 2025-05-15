@@ -28,3 +28,7 @@
     - name: Beekeeper install
       include_tasks: tasks/beekeeper/main.yml
       tags: beekeeper
+
+    - name: CXEdge
+      include_tasks: tasks/cxedge/main.yml
+      tags: cxedge
