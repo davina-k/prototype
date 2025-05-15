@@ -71,4 +71,4 @@
 
     - name: Display final URL
       debug:
-        msg: "Navigate to https://{{ fqdn }}"
+        msg: "Navigate to https://{{ fqdn }} and log in with u:admin, p:admin"
