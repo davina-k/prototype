@@ -11,8 +11,12 @@
     zip_file: "cx-distribution-1.13.1.zip"
     distro_dir: "cx-distribution-1.13.1"
 
-  tasks:
+  vars_prompt:
+    - name: var_initial
+      prompt: input your initials
+      private: false
 
+  tasks:
     - name: Download Docker tar file from repo
       get_url:
         url: "http://your.repo.url/path/to/{{ docker_tar_file }}"
@@ -42,7 +46,7 @@
         line: "{{ item.line }}"
         backrefs: yes
       loop:
-        - { regexp: '^FQDN=.*', line: 'FQDN=octo-{{ var_suffix }}' }
+        - { regexp: '^FQDN=.*', line: 'FQDN=octo-{{ var_initial }}' }
         - { regexp: '^SYSTEM_IP=.*', line: 'SYSTEM_IP=10.10.101.{{ system_ip_suffix }}' }
 
 
@@ -50,7 +54,7 @@
       replace:
         path: "~/{{ distro_dir }}/config/.env"
         regexp: 'localhost'
-        replace: "octo-{{ var_suffix }}"
+        replace: "octo-{{ var_initial }}"
 
     - name: Run CX-Edge installer
       command: sudo ./install.sh --fqdn {{ fqdn }}
