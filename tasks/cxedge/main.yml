@@ -15,64 +15,67 @@
     - name: var_initial
       prompt: input your initials
       private: false
-
-  tasks:
-    - name: Download Docker tar file from repo
-      get_url:
-        url: "http://your.repo.url/path/to/{{ docker_tar_file }}"
-        dest: "~/{{ docker_tar_file }}"
-
-    - name: Load Docker image
-      command: docker load --input ~/{{ docker_tar_file }}
-
-    - name: List Docker images (for debug/check)
-      command: docker image list
-      register: docker_images
-
-    - name: Print Docker image list
       debug:
-        var: docker_images.stdout_lines
+        var: "{{ var_initial }}"
+        # not sure if this debug will work
 
-    - name: Unzip distribution package
-      unarchive:
-        src: "~/{{ zip_file }}"
-        dest: ~/
-        remote_src: yes
+  # tasks:
+  #   - name: Download Docker tar file from repo
+  #     get_url:
+  #       url: "http://your.repo.url/path/to/{{ docker_tar_file }}"
+  #       dest: "~/{{ docker_tar_file }}"
 
-    - name: Modify .env file with FQDN and IP
-      lineinfile:
-        path: "~/{{ distro_dir }}/config/.env"
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-        backrefs: yes
-      loop:
-        - { regexp: '^FQDN=.*', line: 'FQDN=octo-{{ var_initial }}' }
-        - { regexp: '^SYSTEM_IP=.*', line: 'SYSTEM_IP=10.10.101.{{ system_ip_suffix }}' }
+  #   - name: Load Docker image
+  #     command: docker load --input ~/{{ docker_tar_file }}
+
+  #   - name: List Docker images (for debug/check)
+  #     command: docker image list
+  #     register: docker_images
+
+  #   - name: Print Docker image list
+  #     debug:
+  #       var: docker_images.stdout_lines
+
+  #   - name: Unzip distribution package
+  #     unarchive:
+  #       src: "~/{{ zip_file }}"
+  #       dest: ~/
+  #       remote_src: yes
+
+  #   - name: Modify .env file with FQDN and IP
+  #     lineinfile:
+  #       path: "~/{{ distro_dir }}/config/.env"
+  #       regexp: "{{ item.regexp }}"
+  #       line: "{{ item.line }}"
+  #       backrefs: yes
+  #     loop:
+  #       - { regexp: '^FQDN=.*', line: 'FQDN=octo-{{ var_initial }}' }
+  #       - { regexp: '^SYSTEM_IP=.*', line: 'SYSTEM_IP=10.10.101.{{ system_ip_suffix }}' }
 
 
-    - name: Replace localhost with octo-VAR in .env
-      replace:
-        path: "~/{{ distro_dir }}/config/.env"
-        regexp: 'localhost'
-        replace: "octo-{{ var_initial }}"
+  #   - name: Replace localhost with octo-VAR in .env
+  #     replace:
+  #       path: "~/{{ distro_dir }}/config/.env"
+  #       regexp: 'localhost'
+  #       replace: "octo-{{ var_initial }}"
 
-    - name: Run CX-Edge installer
-      command: sudo ./install.sh --fqdn {{ fqdn }}
-      args:
-        chdir: "~/{{ distro_dir }}"
+  #   - name: Run CX-Edge installer
+  #     command: sudo ./install.sh --fqdn {{ fqdn }}
+  #     args:
+  #       chdir: "~/{{ distro_dir }}"
 
-  - name: Update /etc/hosts with new IP
-    lineinfile:
-      path: /etc/hosts
-      regexp: '^121\..*'
-      line: "{{ system_ip }}    {{ fqdn }}"
-      backup: yes
+  # - name: Update /etc/hosts with new IP
+  #   lineinfile:
+  #     path: /etc/hosts
+  #     regexp: '^121\..*'
+  #     line: "{{ system_ip }}    {{ fqdn }}"
+  #     backup: yes
 
-    - name: Start CX-Edge
-      command: ./start.sh
-      args:
-        chdir: "~/{{ distro_dir }}"
+  #   - name: Start CX-Edge
+  #     command: ./start.sh
+  #     args:
+  #       chdir: "~/{{ distro_dir }}"
 
-    - name: Display final URL
-      debug:
-        msg: "Navigate to https://{{ fqdn }} and log in with u:admin, p:admin"
+  #   - name: Display final URL
+  #     debug:
+  #       msg: "Navigate to https://{{ fqdn }} and log in with u:admin, p:admin"
