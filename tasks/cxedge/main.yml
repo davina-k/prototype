@@ -15,7 +15,7 @@
     - name: var_initial
       prompt: input your initials
       private: false
-      debug:
+      # debug:
         # var: "{{ var_initial }}"
         # not sure if this debug will work
 
