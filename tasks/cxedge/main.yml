@@ -1,6 +1,5 @@
 ---
 - name: Minimal Test
-  become: yes
 
   vars_prompt:
     - name: var_initial
