@@ -26,6 +26,7 @@
         name: docker.io
         state: present
       register: docker_check
+      ignore_errors: true
 
     # - name: Include Docker install if not present
     #   include_tasks: tasks/docker/main.yml
