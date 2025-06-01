@@ -21,42 +21,42 @@
       ansible.builtin.debug:
         msg: Download will only work if cx-edge download files and playbook are in your home directory
     
-    - name: Check if Docker is installed
-      package:
-        name: docker.io
-        state: present
-      register: docker_check
-      ignore_errors: true
+    # - name: Check if Docker is installed
+    #   package:
+    #     name: docker.io
+    #     state: present
+    #   register: docker_check
+    #   ignore_errors: true
 
     # - name: Include Docker install if not present
     #   include_tasks: tasks/docker/main.yml
     #   when: docker_check.rc != 0
 
-    - name: Check if Portainer image is present
-      community.docker.docker_image:
-        name: portainer/portainer
-        tag: "{{ portainer_tag }}"
-        source: local
-      register: portainer_check
-      ignore_errors: true
+    # - name: Check if Portainer image is present
+    #   community.docker.docker_image:
+    #     name: portainer/portainer
+    #     tag: "{{ portainer_tag }}"
+    #     source: local
+    #   register: portainer_check
+    #   ignore_errors: true
 
     # - name: Include Portainer install if image is not present
     #   include_tasks: tasks/portainer/main.yml
     #   when: portainer_check.failed or not portainer_check.image
 
-    - name: Check if Portainer container is running
-      community.docker.docker_container:
-        name: portainer
-        state: present
-        image: portainer/portainer:{{ portainer_tag }}
-        restart_policy: always
-      register: portainer_container
+    # - name: Check if Portainer container is running
+    #   community.docker.docker_container:
+    #     name: portainer
+    #     state: present
+    #     image: portainer/portainer:{{ portainer_tag }}
+    #     restart_policy: always
+    #   register: portainer_container
 
-    - name: Check if Docker is running
-      ansible.builtin.shell:
-        cmd: docker info
-      register: docker_info
-      ignore_errors: true
+    # - name: Check if Docker is running
+    #   ansible.builtin.shell:
+    #     cmd: docker info
+    #   register: docker_info
+    #   ignore_errors: true
     
     - name: Load Docker image
       command: docker load --input ~/{{ docker_tar_file }}
