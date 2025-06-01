@@ -12,7 +12,7 @@
   vars:
     fqdn: "octo-{{ var_initial }}"
     system_ip: "{{ ansible_default_ipv4.address }}"
-    docker_tar_file: "cx-images-1.15.6-full.tar"
+    docker_tar_file: "cx-images-1.15.6.tar"
     zip_file: "cx-distribution-1.15.6.zip"
     distro_dir: "cx-distribution-1.15.6"
 
