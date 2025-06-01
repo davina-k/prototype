@@ -1,6 +1,5 @@
 ---
 - name: Minimal Test
-  hosts: localhost
   become: yes
 
   vars_prompt:
