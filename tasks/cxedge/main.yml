@@ -1,5 +1,6 @@
 ---
 - name: Minimal Test
+  hosts: localhost
 
   vars_prompt:
     - name: var_initial
