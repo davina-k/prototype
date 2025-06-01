@@ -3,6 +3,7 @@
 - name: Install and configure CX-Edge and AITR
   hosts: localhost
   become: yes
+  
   vars_prompt:
     - name: var_initial
       prompt: input your initials
@@ -19,6 +20,32 @@
     - name: Print message
       ansible.builtin.debug:
         msg: Download will only work if cx-edge download files and playbook are in your home directory
+    
+    - name: Check if Docker is installed
+      community.general.package:
+        name: docker.io
+        state: present
+      register: docker_installed
+
+    - name: Check if Portainer image is present
+      community.docker.docker_image:
+        name: portainer/portainer
+        tag: "{{ portainer_tag }}"
+      register: portainer_image
+
+    - name: Check if Portainer container is running
+      community.docker.docker_container:
+        name: portainer
+        state: present
+        image: portainer/portainer:{{ portainer_tag }}
+        restart_policy: always
+      register: portainer_container
+
+      - name: Check if Docker is running
+      ansible.builtin.shell:
+        cmd: docker info
+      register: docker_info
+      ignore_errors: true
     
     - name: Load Docker image
       command: docker load --input ~/{{ docker_tar_file }}
