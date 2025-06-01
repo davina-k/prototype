@@ -1,100 +1,80 @@
 ---
-- name: Minimal Test
-  hosts: localhost
 
+- name: Install and configure CX-Edge and AITR
+  hosts: localhost
+  become: yes
   vars_prompt:
     - name: var_initial
-      prompt: "Initials?"
+      prompt: input your initials
       private: false
-
+      
   vars:
     fqdn: "octo-{{ var_initial }}"
+    system_ip: "{{ ansible_default_ipv4.address }}"
+    docker_tar_file: "cx-images-1.15.6-full.tar"
+    zip_file: "cx-distribution-1.15.6.zip"
+    distro_dir: "cx-distribution-1.15.6"
 
   tasks:
-    - name: Print the FQDN
-      debug:
-        msg: "The FQDN is {{ fqdn }}"
-
-
-
-
-# ---
-
-# - name: Install and configure CX-Edge and AITR
-#   hosts: localhost
-#   become: yes
-#   vars_prompt:
-#     - name: var_initial
-#       prompt: input your initials
-#       private: false
-      
-#   vars:
-#     fqdn: "octo-{{ var_initial }}"
-#     system_ip: "{{ ansible_default_ipv4.address }}"
-#     docker_tar_file: "cx-images-1.15.6-full.tar"
-#     zip_file: "cx-distribution-1.15.6.zip"
-#     distro_dir: "cx-distribution-1.15.6"
-
-#   tasks:
-#     - name: Print message
-#       ansible.builtin.debug:
-#         msg: Download will only work if cx-edge download files and playbook are in your home directory
+    - name: Print message
+      ansible.builtin.debug:
+        msg: Download will only work if cx-edge download files and playbook are in your home directory
     
-#     - name: Load Docker image
-#       command: docker load --input ~/{{ docker_tar_file }}
-#       register: docker_load_result
-#       ignore_errors: true
+    - name: Load Docker image
+      command: docker load --input ~/{{ docker_tar_file }}
+      register: docker_load_result
+      ignore_errors: true
     
-#     - name: Unzip distribution package
-#       unarchive:
-#         src: "~/{{ zip_file }}"
-#         dest: ~/
-#         remote_src: yes
+    - name: Unzip distribution package
+      unarchive:
+        src: "~/{{ zip_file }}"
+        dest: ~/
+        remote_src: yes
 
-#     - name: Update .env file in config directory
-#       lineinfile:
-#         path: "~/{{ distro_dir }}/config/.env"
-#         regexp: "{{ item.regex }}"
-#         line: "{{ item.line }}"
-#         backrefs: yes
-#       loop:
-#         - { regex: 'localhost', line: '{{ fqdn }}' }
-#         - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
+    - name: Update .env file in config directory
+      lineinfile:
+        path: "~/{{ distro_dir }}/config/.env"
+        regexp: "{{ item.regex }}"
+        line: "{{ item.line }}"
+        backrefs: yes
+      loop:
+        - { regex: 'localhost', line: '{{ fqdn }}' }
+        - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
 
-#     - name: Add ActiveMQ ports to backend docker-compose
-#       blockinfile:
-#         path: "~/{{ distro_dir }}/distribute/backend/docker-compose.yml"
-#         marker: "# {mark} activemq ports"
-#         insertafter: 'activemq:'
-#         block: |
-#           ports:
-#             - "8161:8161"
-#             - "5672:5672"
-#             - "61613:61613"
+    - name: Add ActiveMQ ports to backend docker-compose
+      blockinfile:
+        path: "~/{{ distro_dir }}/distribute/backend/docker-compose.yml"
+        marker: "# {mark} activemq ports"
+        insertafter: 'activemq:'
+        block: |
+          ports:
+            - "8161:8161"
+            - "5672:5672"
+            - "61613:61613"
 
-#     - name: Run install script
-#       command: ./install.sh --fqdn {{ fqdn }} --include-algos
-#       args:
-#         chdir: "~/{{ distro_dir }}"
+    - name: Run install script
+      command: ./install.sh --fqdn {{ fqdn }} --include-algos
+      args:
+        chdir: "~/{{ distro_dir }}"
 
-#     - name: Run start script
-#       command: ./start.sh --include-algos
-#       args:
-#         chdir: "~/{{ distro_dir }}"
-
-
+    - name: Run start script
+      command: ./start.sh --include-algos
+      args:
+        chdir: "~/{{ distro_dir }}"
 
 
 
 
-#   #   - name: Config disto file
-#   #     command: 
-#   #       cmd: 
-#   #       chdir: /
+
+
+  #   - name: Config disto file
+  #     command: 
+  #       cmd: 
+  #       chdir: /
       
 
-#   #     - name: Change directory and run command
-#   # command:
-#   #   cmd: ls -l
-#   #   chdir: /data/example
+  #     - name: Change directory and run command
+  # command:
+  #   cmd: ls -l
+  #   chdir: /data/example
 
