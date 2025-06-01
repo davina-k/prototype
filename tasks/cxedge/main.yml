@@ -51,7 +51,7 @@
         restart_policy: always
       register: portainer_container
 
-      - name: Check if Docker is running
+    - name: Check if Docker is running
       ansible.builtin.shell:
         cmd: docker info
       register: docker_info
