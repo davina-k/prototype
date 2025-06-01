@@ -22,14 +22,14 @@
         msg: Download will only work if cx-edge download files and playbook are in your home directory
     
     - name: Check if Docker is installed
-      community.general.package:
+      package:
         name: docker.io
         state: present
       register: docker_check
 
-    - name: Include Docker install if not present
-      include_tasks: tasks/docker/main.yml
-      when: docker_check.rc != 0
+    # - name: Include Docker install if not present
+    #   include_tasks: tasks/docker/main.yml
+    #   when: docker_check.rc != 0
 
     - name: Check if Portainer image is present
       community.docker.docker_image:
@@ -39,9 +39,9 @@
       register: portainer_check
       ignore_errors: true
 
-    - name: Include Portainer install if image is not present
-      include_tasks: tasks/portainer/main.yml
-      when: portainer_check.failed or not portainer_check.image
+    # - name: Include Portainer install if image is not present
+    #   include_tasks: tasks/portainer/main.yml
+    #   when: portainer_check.failed or not portainer_check.image
 
     - name: Check if Portainer container is running
       community.docker.docker_container:
