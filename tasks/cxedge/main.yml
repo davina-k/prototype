@@ -1,6 +1,4 @@
 ---
-
-
 - name: Install and configure CX-Edge
   hosts: localhost
   vars:
@@ -68,9 +66,9 @@
     #   ignore_errors: true
     
     # - name: Load Docker image
-      command: docker load --input {{ ansible_user_dir }}/{{ docker_tar_file }}
-      register: docker_load_result
-      ignore_errors: true
+      # command: docker load --input {{ ansible_user_dir }}/{{ docker_tar_file }}
+      # register: docker_load_result
+      # ignore_errors: true
     
     # - name: Unzip distribution package
     #   unarchive:
