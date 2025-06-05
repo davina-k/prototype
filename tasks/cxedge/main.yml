@@ -15,18 +15,26 @@
     - name: var_initial
       prompt: input your initials
       private: false
-      # debug:
-        # var: "{{ var_initial }}"
-        # not sure if this debug will work
 
-  # tasks:
-  #   - name: Download Docker tar file from repo
+  tasks:
+  - name: Check for required files
+    stat: 
+      path: ~/Downloads/
+    register: file_status
+
+
+- name: Show user home
+  debug:
+    msg: "User home is {{ ansible_env.HOME }}"
+  
+  #   keeping this in but commented out so we can hopefully pull from gitlab/artifactory/something eventually
+  # - name: Download Docker tar file from repo
   #     get_url:
   #       url: "http://your.repo.url/path/to/{{ docker_tar_file }}"
-  #       dest: "~/{{ docker_tar_file }}"
+  #       dest: "{{ ansible_env.HOME }}/{{ docker_tar_file }}"
 
   #   - name: Load Docker image
-  #     command: docker load --input ~/{{ docker_tar_file }}
+  #     command: docker load --input {{ ansible_env.HOME }}/{{ docker_tar_file }}
 
   #   - name: List Docker images (for debug/check)
   #     command: docker image list
@@ -38,13 +46,13 @@
 
   #   - name: Unzip distribution package
   #     unarchive:
-  #       src: "~/{{ zip_file }}"
-  #       dest: ~/
+  #       src: "{{ ansible_env.HOME }}/{{ zip_file }}"
+  #       dest: {{ ansible_env.HOME }}/
   #       remote_src: yes
 
   #   - name: Modify .env file with FQDN and IP
   #     lineinfile:
-  #       path: "~/{{ distro_dir }}/config/.env"
+  #       path: "{{ ansible_env.HOME }}/{{ distro_dir }}/config/.env"
   #       regexp: "{{ item.regexp }}"
   #       line: "{{ item.line }}"
   #       backrefs: yes
@@ -55,14 +63,14 @@
 
   #   - name: Replace localhost with octo-VAR in .env
   #     replace:
-  #       path: "~/{{ distro_dir }}/config/.env"
+  #       path: "{{ ansible_env.HOME }}/{{ distro_dir }}/config/.env"
   #       regexp: 'localhost'
   #       replace: "octo-{{ var_initial }}"
 
   #   - name: Run CX-Edge installer
   #     command: sudo ./install.sh --fqdn {{ fqdn }}
   #     args:
-  #       chdir: "~/{{ distro_dir }}"
+  #       chdir: "{{ ansible_env.HOME }}/{{ distro_dir }}"
 
   # - name: Update /etc/hosts with new IP
   #   lineinfile:
@@ -74,7 +82,7 @@
   #   - name: Start CX-Edge
   #     command: ./start.sh
   #     args:
-  #       chdir: "~/{{ distro_dir }}"
+  #       chdir: "{{ ansible_env.HOME }}/{{ distro_dir }}"
 
   #   - name: Display final URL
   #     debug:
