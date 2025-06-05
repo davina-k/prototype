@@ -22,7 +22,7 @@
 
   - name: Show user home
     debug:
-      msg: "User home is {{ ansible_env.HOME }}"
+      msg: "User home is {{ ansible_user_dir }}"
 
   - name: Print message
     debug:
