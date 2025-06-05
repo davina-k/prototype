@@ -23,9 +23,9 @@
     register: file_status
 
 
-- name: Show user home
-  debug:
-    msg: "User home is {{ ansible_env.HOME }}"
+  - name: Show user home
+    debug:
+      msg: "User home is {{ ansible_env.HOME }}"
   
   #   keeping this in but commented out so we can hopefully pull from gitlab/artifactory/something eventually
   # - name: Download Docker tar file from repo
