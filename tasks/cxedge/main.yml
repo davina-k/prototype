@@ -1,23 +1,33 @@
 ---
 
-- name: Install and configure CX-Edge and AITR
+
+- name: Install and configure CX-Edge
   hosts: localhost
+  vars:
+    fqdn: "octo-{{ var_initial }}"
+    system_ip: "{{ ansible_default_ipv4.address }}"
+    docker_tar_file: "cx-images-1.13.1.tar"
+    zip_file: "cx-distribution-1.13.1.zip"
+    distro_dir: "cx-distribution-1.13.1"
 
   vars_prompt:
     - name: var_initial
       prompt: input your initials
       private: false
-      
-  vars:
-    fqdn: "octo-{{ var_initial }}"
-    system_ip: "{{ ansible_default_ipv4.address }}"
-    docker_tar_file: "cx-images-1.15.6.tar"
-    zip_file: "cx-distribution-1.15.6.zip"
-    distro_dir: "cx-distribution-1.15.6"
 
   tasks:
+  - name: Check for required files
+    stat: 
+      path: ~/Downloads/
+    register: file_status
+
+
+  - name: Show user home
+    debug:
+      msg: "User home is {{ ansible_env.HOME }}"
+
     - name: Print message
-      ansible.builtin.debug:
+      debug:
         msg: Download will only work if cx-edge download files and playbook are in your home directory
 
     # - name: Check if Docker is installed
