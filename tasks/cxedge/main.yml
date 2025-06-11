@@ -4,9 +4,9 @@
   vars:
     fqdn: "octo-{{ var_initial }}"
     system_ip: "{{ ansible_default_ipv4.address }}"
-    docker_tar_file: "cx-images-1.13.1.tar"
-    zip_file: "cx-distribution-1.13.1.zip"
-    distro_dir: "cx-distribution-1.13.1"
+    docker_tar_file: "cx-images-1.15.6.tar"
+    zip_file: "cx-distribution-1.15.6.zip"
+    distro_dir: "cx-distribution-1.15.6"
 
   vars_prompt:
     - name: var_initial
@@ -16,13 +16,13 @@
   tasks:
   - name: Check for required files
     stat: 
-      path: ~/Downloads/
+      path: home/localadmin/Downloads
     register: file_status
 
 
-  - name: Show user home
-    debug:
-      msg: "User home is {{ ansible_user_dir }}"
+  # - name: Show user home
+  #   debug:
+  #     msg: "User home is {{ ansible_user_dir }}"
 
   - name: Print message
     debug:
