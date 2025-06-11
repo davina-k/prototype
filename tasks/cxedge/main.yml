@@ -16,7 +16,7 @@
   tasks:
   - name: Check for required files
     stat:
-      path: "/home/localadmin/Downloads/{{ item }}"
+      path: "/home/localadmin/{{ item }}"
     loop:
       - "{{ docker_tar_file }}"
       - "{{ zip_file }}"
