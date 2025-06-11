@@ -65,18 +65,18 @@
 
   - name: Unzip distribution package
     unarchive:
-      src: "/home/localadmin/Downloads/{{ zip_file }}"
-      dest: "/home/localadmin/Downloads/"
+      src: "/home/localadmin/{{ zip_file }}"
+      dest: "/home/localadmin/"
       remote_src: yes
     
   # - name: Load Docker image
-  #   command: docker load --input /home/localadmin/Downloads/{{ docker_tar_file }}
+  #   command: docker load --input /home/localadmin/{{ docker_tar_file }}
   #   register: docker_load_result
   #   ignore_errors: true
 
   # - name: Update .env file in config directory
   #   lineinfile:
-  #     path: "/home/localadmin/Downloads/{{ distro_dir }}/config/.env"
+  #     path: "/home/localadmin/{{ distro_dir }}/config/.env"
   #     regexp: "{{ item.regex }}"
   #     line: "{{ item.line }}"
   #     backrefs: yes
@@ -86,7 +86,7 @@
 
   # - name: Add ActiveMQ ports to backend docker-compose
   #   blockinfile:
-  #     path: "/home/localadmin/Downloads/{{ distro_dir }}/distribute/backend/docker-compose.yml"
+  #     path: "/home/localadmin/{{ distro_dir }}/distribute/backend/docker-compose.yml"
   #     marker: "# {mark} activemq ports"
   #     insertafter: 'activemq:'
   #     block: |
@@ -98,12 +98,12 @@
   # - name: Run install script
   #   command: ./install.sh --fqdn {{ fqdn }} --include-algos
   #     args:
-  #       chdir: "/home/localadmin/Downloads/{{ distro_dir }}"
+  #       chdir: "/home/localadmin/{{ distro_dir }}"
 
   # - name: Run start script
   #   command: ./start.sh --include-algos
   #   args:
-  #     chdir: "/home/localadmin/Downloads/{{ distro_dir }}"
+  #     chdir: "/home/localadmin/{{ distro_dir }}"
 
 
 
