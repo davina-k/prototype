@@ -22,11 +22,6 @@
       - "{{ zip_file }}"
     register: file_status
 
-
-  # - name: Show user home
-  #   debug:
-  #     msg: "User home is {{ ansible_user_dir }}"
-
   - name: Print message
     debug:
       msg: Download will only work if cx-edge download files and playbook are in your home directory
@@ -67,48 +62,48 @@
     #     cmd: docker info
     #   register: docker_info
     #   ignore_errors: true
+
+    - name: Unzip distribution package
+      unarchive:
+        src: "~/{{ zip_file }}"
+        dest: ~/
+        remote_src: yes
     
-    # - name: Load Docker image
-      # command: docker load --input {{ ansible_user_dir }}/{{ docker_tar_file }}
-      # register: docker_load_result
-      # ignore_errors: true
-    
-    # - name: Unzip distribution package
-    #   unarchive:
-    #     src: "~/{{ zip_file }}"
-    #     dest: ~/
-    #     remote_src: yes
+    - name: Load Docker image
+      command: docker load --input {{ ansible_user_dir }}/{{ docker_tar_file }}
+      register: docker_load_result
+      ignore_errors: true
 
-    # - name: Update .env file in config directory
-    #   lineinfile:
-    #     path: "~/{{ distro_dir }}/config/.env"
-    #     regexp: "{{ item.regex }}"
-    #     line: "{{ item.line }}"
-    #     backrefs: yes
-    #   loop:
-    #     - { regex: 'localhost', line: '{{ fqdn }}' }
-    #     - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
+    - name: Update .env file in config directory
+      lineinfile:
+        path: "~/{{ distro_dir }}/config/.env"
+        regexp: "{{ item.regex }}"
+        line: "{{ item.line }}"
+        backrefs: yes
+      loop:
+        - { regex: 'localhost', line: '{{ fqdn }}' }
+        - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
 
-    # - name: Add ActiveMQ ports to backend docker-compose
-    #   blockinfile:
-    #     path: "~/{{ distro_dir }}/distribute/backend/docker-compose.yml"
-    #     marker: "# {mark} activemq ports"
-    #     insertafter: 'activemq:'
-    #     block: |
-    #       ports:
-    #         - "8161:8161"
-    #         - "5672:5672"
-    #         - "61613:61613"
+    - name: Add ActiveMQ ports to backend docker-compose
+      blockinfile:
+        path: "~/{{ distro_dir }}/distribute/backend/docker-compose.yml"
+        marker: "# {mark} activemq ports"
+        insertafter: 'activemq:'
+        block: |
+          ports:
+            - "8161:8161"
+            - "5672:5672"
+            - "61613:61613"
 
-    # - name: Run install script
-    #   command: ./install.sh --fqdn {{ fqdn }} --include-algos
-    #   args:
-    #     chdir: "~/{{ distro_dir }}"
+    - name: Run install script
+      command: ./install.sh --fqdn {{ fqdn }} --include-algos
+      args:
+        chdir: "~/{{ distro_dir }}"
 
-    # - name: Run start script
-    #   command: ./start.sh --include-algos
-    #   args:
-    #     chdir: "~/{{ distro_dir }}"
+    - name: Run start script
+      command: ./start.sh --include-algos
+      args:
+        chdir: "~/{{ distro_dir }}"
 
 
 
