@@ -70,6 +70,7 @@
       remote_src: yes
     
   - name: Load Docker image
+    become: true
     command: docker load --input /home/localadmin/{{ docker_tar_file }}
     register: docker_load_result
     ignore_errors: true
