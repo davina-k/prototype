@@ -102,10 +102,10 @@
       chdir: "/home/localadmin/{{ distro_dir }}"
 
   - name: Run start script
-    command: ./start.sh --include-algos
+    command: start.sh
     args:
       chdir: "/home/localadmin/{{ distro_dir }}"
-
+# removed --include-algos after start.sh
 
 
 
