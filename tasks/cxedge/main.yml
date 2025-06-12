@@ -63,27 +63,27 @@
     #   register: docker_info
     #   ignore_errors: true
 
-  # - name: Unzip distribution package
-  #   unarchive:
-  #     src: "/home/localadmin/{{ zip_file }}"
-  #     dest: "/home/localadmin/"
-  #     remote_src: yes
+  - name: Unzip distribution package
+    unarchive:
+      src: "/home/localadmin/{{ zip_file }}"
+      dest: "/home/localadmin/"
+      remote_src: yes
     
-  # - name: Load Docker image
-  #   become: true
-  #   command: docker load --input /home/localadmin/{{ docker_tar_file }}
-  #   register: docker_load_result
-  #   ignore_errors: true
+  - name: Load Docker image
+    become: true
+    command: docker load --input /home/localadmin/{{ docker_tar_file }}
+    register: docker_load_result
+    ignore_errors: true
 
-  # - name: Update .env file in config directory
-  #   lineinfile:
-  #     path: "/home/localadmin/{{ distro_dir }}/config/.env"
-  #     regexp: "{{ item.regex }}"
-  #     line: "{{ item.line }}"
-  #     backrefs: yes
-  #   loop:
-  #     - { regex: 'localhost', line: '{{ fqdn }}' }
-  #     - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
+  - name: Update .env file in config directory
+    lineinfile:
+      path: "/home/localadmin/{{ distro_dir }}/config/.env"
+      regexp: "{{ item.regex }}"
+      line: "{{ item.line }}"
+      backrefs: yes
+    loop:
+      - { regex: 'localhost', line: '{{ fqdn }}' }
+      - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
 
   - name: Add ActiveMQ ports to backend docker-compose
     blockinfile:
