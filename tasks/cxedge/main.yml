@@ -87,7 +87,7 @@
 
   - name: Add ActiveMQ ports to backend docker-compose
     blockinfile:
-      path: "/home/localadmin/{{ distro_dir }}/distribute/backend/docker-compose.yml"
+      path: "/home/localadmin/{{ distro_dir }}/docker-compose-backend.yml"
       marker: "# {mark} activemq ports"
       insertafter: 'activemq:'
       block: |
