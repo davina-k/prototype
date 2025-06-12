@@ -75,36 +75,36 @@
   #   register: docker_load_result
   #   ignore_errors: true
 
-  - name: Update .env file in config directory
-    lineinfile:
-      path: "/home/localadmin/{{ distro_dir }}/config/.env"
-      regexp: "{{ item.regex }}"
-      line: "{{ item.line }}"
-      backrefs: yes
-    loop:
-      - { regex: 'localhost', line: '{{ fqdn }}' }
-      - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
+  # - name: Update .env file in config directory
+  #   lineinfile:
+  #     path: "/home/localadmin/{{ distro_dir }}/config/.env"
+  #     regexp: "{{ item.regex }}"
+  #     line: "{{ item.line }}"
+  #     backrefs: yes
+  #   loop:
+  #     - { regex: 'localhost', line: '{{ fqdn }}' }
+  #     - { regex: 'SYSTEM_IP=.*', line: 'SYSTEM_IP={{ system_ip }}' }
 
-  # - name: Add ActiveMQ ports to backend docker-compose
-  #   blockinfile:
-  #     path: "/home/localadmin/{{ distro_dir }}/distribute/backend/docker-compose.yml"
-  #     marker: "# {mark} activemq ports"
-  #     insertafter: 'activemq:'
-  #     block: |
-  #       ports:
-  #         - "8161:8161"
-  #         - "5672:5672"
-  #         - "61613:61613"
+  - name: Add ActiveMQ ports to backend docker-compose
+    blockinfile:
+      path: "/home/localadmin/{{ distro_dir }}/distribute/backend/docker-compose.yml"
+      marker: "# {mark} activemq ports"
+      insertafter: 'activemq:'
+      block: |
+        ports:
+          - "8161:8161"
+          - "5672:5672"
+          - "61613:61613"
 
-  # - name: Run install script
-  #   command: ./install.sh --fqdn {{ fqdn }} --include-algos
-  #     args:
-  #       chdir: "/home/localadmin/{{ distro_dir }}"
+  - name: Run install script
+    command: ./install.sh --fqdn {{ fqdn }} --include-algos
+      args:
+        chdir: "/home/localadmin/{{ distro_dir }}"
 
-  # - name: Run start script
-  #   command: ./start.sh --include-algos
-  #   args:
-  #     chdir: "/home/localadmin/{{ distro_dir }}"
+  - name: Run start script
+    command: ./start.sh --include-algos
+    args:
+      chdir: "/home/localadmin/{{ distro_dir }}"
 
 
 
