@@ -98,8 +98,8 @@
 
   - name: Run install script
     command: ./install.sh --fqdn {{ fqdn }} --include-algos
-      args:
-        chdir: "/home/localadmin/{{ distro_dir }}"
+    args:
+      chdir: "/home/localadmin/{{ distro_dir }}"
 
   - name: Run start script
     command: ./start.sh --include-algos
